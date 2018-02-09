@@ -19,8 +19,7 @@ module.exports = function Option(object) {
 
     get: function(target, prop) {
       const val = target[prop];
-      console.log(prop);
-      console.log("--------------------------");
+
       if (prop === "$get") return this.$get.bind(target);
       if (prop === "$undefined") return this._missingProps;
       if (this._hasMissingProp(val)) this._missingProps.push(prop);

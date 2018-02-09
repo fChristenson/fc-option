@@ -6,7 +6,7 @@ module.exports = function Option(object) {
 
     $get: function() {
       if (typeof this._savedProp !== "function") return this._savedProp;
-      return this._savedProp(...arguments);
+      return this._savedProp.apply(object, arguments);
     },
 
     _isObject: function(prop) {

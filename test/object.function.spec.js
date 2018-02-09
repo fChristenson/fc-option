@@ -67,6 +67,90 @@ describe("Object test", () => {
       expect(actual).toEqual(expected);
     });
 
+    it("can call es5 function one level deep with 'this' keyword", () => {
+      const test = {
+        val: 1,
+        foo: function(a, b) {
+          return a + b + this.val;
+        }
+      };
+      const expected = 3;
+      const actual = new Option(test).foo.$get(1, 1);
+      expect(actual).toEqual(expected);
+    });
+
+    it("can call es5 function two level deep with 'this' keyword", () => {
+      const test = {
+        val: 1,
+        foo: {
+          bar: function(a, b) {
+            return a + b + this.val;
+          }
+        }
+      };
+      const expected = 3;
+      const actual = new Option(test).foo.bar.$get(1, 1);
+      expect(actual).toEqual(expected);
+    });
+
+    it("can call and set es5 function one level deep with 'this' keyword", () => {
+      const test = {
+        val: 1,
+        foo: function(a, b) {
+          this.val = a + b;
+        }
+      };
+      const actual = new Option(test).foo.$get(1, 1);
+      expect(actual).toEqual(undefined);
+      expect(test.val).toEqual(2);
+    });
+
+    it("can call and set es5 function two levels deep with 'this' keyword", () => {
+      const test = {
+        val: 1,
+        foo: {
+          bar: function(a, b) {
+            this.val = a + b;
+          }
+        }
+      };
+      const actual = new Option(test).foo.bar.$get(1, 1);
+      expect(actual).toEqual(undefined);
+      expect(test.val).toEqual(2);
+    });
+
+    it("can call and set es5 function three levels deep with 'this' keyword", () => {
+      const test = {
+        val: 1,
+        foo: {
+          bar: {
+            baz: function(a, b) {
+              this.val = a + b;
+            }
+          }
+        }
+      };
+      const actual = new Option(test).foo.bar.baz.$get(1, 1);
+      expect(actual).toEqual(undefined);
+      expect(test.val).toEqual(2);
+    });
+
+    it("can call es5 function three level deep with 'this' keyword", () => {
+      const test = {
+        val: 1,
+        foo: {
+          bar: {
+            baz: function(a, b) {
+              return a + b + this.val;
+            }
+          }
+        }
+      };
+      const expected = 3;
+      const actual = new Option(test).foo.bar.baz.$get(1, 1);
+      expect(actual).toEqual(expected);
+    });
+
     it("can call es6 function one level deep without parameters", () => {
       const test = {
         foo: () => {

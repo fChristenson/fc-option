@@ -1,14 +1,14 @@
 {
-  "name": "yes",
+  "name": "fc-option",
   "version": "1.0.0",
-  "description": "",
+  "description": "Safe object property access",
   "main": "index.js",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Fredrik Christenson",
+  "license": "MIT",
   "devDependencies": {
     "jest": "22.2.2"
   }

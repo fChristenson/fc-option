@@ -5,8 +5,8 @@ describe("Object test", () => {
     expect(Option).toBeDefined();
   });
 
-  describe("Number access", () => {
-    it("can access a number property one level deep", () => {
+  describe("property access", () => {
+    it("can access a property one level deep", () => {
       const test = {
         foo: 1
       };
@@ -22,7 +22,7 @@ describe("Object test", () => {
       expect(actual).toEqual(expected);
     });
 
-    it("can access a number property two levels deep", () => {
+    it("can access a property two levels deep", () => {
       const test = {
         foo: {
           bar: 1
@@ -40,7 +40,7 @@ describe("Object test", () => {
       expect(actual).toEqual(expected);
     });
 
-    it("can access a number property three levels deep", () => {
+    it("can access a property three levels deep", () => {
       const test = {
         foo: {
           bar: {

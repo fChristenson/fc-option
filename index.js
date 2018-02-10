@@ -1,4 +1,5 @@
 const P = require("./lib/predicates");
+const Target = require("./lib/target");
 const $get = require("./lib/$get");
 const _saveValue = require("./lib/_saveValue");
 
@@ -9,7 +10,7 @@ const _saveValue = require("./lib/_saveValue");
  * 
  * Proxy: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
  * 
- * @param {Any} target Any value
+ * @param {*} target Any value
  * @returns A Proxy instance with the provided value or an empty object
  * if the provided value is not an instance of Object.
  */
@@ -51,8 +52,7 @@ function Option(anyVal) {
     }
   };
 
-  // if the provided value is not an instance of Object we init with an empty object
-  const target = handler._savedNonObject !== undefined ? {} : handler._anyVal;
+  const target = new Target(handler._savedNonObject, handler._anyVal);
   return new Proxy(target, handler);
 }
 

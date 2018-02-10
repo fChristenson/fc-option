@@ -28,6 +28,10 @@ function Option(anyVal) {
     _saveValue,
 
     get: function(target, prop) {
+      if (P.isEndOfPropertyChainCommand(prop) && this._savedNonObject) {
+        return () => this.$get(this._savedNonObject);
+      }
+
       if (P.isEndOfPropertyChainCommand(prop)) {
         return this.$get.bind(target);
       }
@@ -37,12 +41,11 @@ function Option(anyVal) {
       }
 
       const val = target[prop];
+      this._saveValue(prop, val);
 
       if (P.isObject(val) || Array.isArray(val)) {
         return new Proxy(val, this);
       }
-
-      this._saveValue(prop, val);
 
       return new Proxy(this, this);
     }

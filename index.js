@@ -5,7 +5,7 @@ const _saveValue = require("./lib/_saveValue");
 
 /**
  * Option is intended to wrap any value in a Proxy to
- * allow the caller to safely do an arbetrary amount of
+ * allow the caller to safely do an arbitrary amount of
  * property reads without risk of throwing an "is undefined error".
  * 
  * Proxy: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy

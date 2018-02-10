@@ -1,3 +1,3 @@
-test/
+__tests__/
 .gitignore
 node_modules/

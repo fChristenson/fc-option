@@ -61,4 +61,6 @@ Option.from = function(val) {
   return new Option(val);
 };
 
+//TODO: add pretty print inspect for Option
+
 module.exports = Option;

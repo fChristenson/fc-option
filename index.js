@@ -13,9 +13,10 @@ const _saveValue = require("./lib/_saveValue");
  * @returns A Proxy instance with the provided value or an empty object
  * if the provided value is null or undefined.
  */
-module.exports = function Option(anyVal) {
+function Option(anyVal) {
   const handler = {
     // private fields
+    _savedNonObject: P.isNotArrayOrObject(anyVal) ? anyVal : undefined,
     _savedProp: undefined,
     _anyVal: P.isNotDefined(anyVal) ? {} : anyVal,
     _missingProps: [],
@@ -47,5 +48,13 @@ module.exports = function Option(anyVal) {
     }
   };
 
-  return new Proxy(handler._anyVal, handler);
+  const target = handler._savedNonObject !== undefined ? {} : handler._anyVal;
+
+  return new Proxy(target, handler);
+}
+
+Option.from = function(val) {
+  return new Option(val);
 };
+
+module.exports = Option;

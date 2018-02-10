@@ -13,7 +13,7 @@ module.exports = function Option(object) {
       return typeof prop === "object" && !Array.isArray(prop);
     },
 
-    _hasMissingProp: function(prop) {
+    _isMissingProp: function(prop) {
       return prop === undefined;
     },
 
@@ -22,7 +22,7 @@ module.exports = function Option(object) {
 
       if (prop === "$get") return this.$get.bind(target);
       if (prop === "$undefined") return this._missingProps;
-      if (this._hasMissingProp(val)) this._missingProps.push(prop);
+      if (this._isMissingProp(val)) this._missingProps.push(prop);
 
       this._savedProp = val;
 

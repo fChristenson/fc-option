@@ -1,36 +1,55 @@
-module.exports = function Option(object) {
+const P = require("./lib/predicates");
+
+/**
+ * Option is intended to wrap any value in a Proxy to
+ * allow the caller to safely do an arbetrary amount of
+ * property reads without risk of throwing an "is undefined error".
+ * 
+ * Proxy: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
+ * 
+ * @param {Any} target Any value
+ * @returns A Proxy instance with the provided value or an empty object
+ * if the provided value is null or undefined.
+ */
+module.exports = function Option(anyVal) {
   const handler = {
     _savedProp: undefined,
-
+    _anyVal: P.isNotDefined(anyVal) ? {} : anyVal,
     _missingProps: [],
 
     $get: function() {
       if (typeof this._savedProp !== "function") return this._savedProp;
-      return this._savedProp.apply(object, arguments);
+      return this._savedProp.apply(this._anyVal, arguments);
     },
 
-    _isObject: function(prop) {
-      return typeof prop === "object" && !Array.isArray(prop);
-    },
+    _saveValue: function(val) {
+      if (P.isUndefined(val)) {
+        this._missingProps.push(val);
+      }
 
-    _isMissingProp: function(prop) {
-      return prop === undefined;
+      this._savedProp = val;
     },
 
     get: function(target, prop) {
+      if (P.isEndOfPropertyChainCommand(prop)) {
+        return this.$get.bind(target);
+      }
+
+      if (P.isReturnUndefinedPropertyArrayCommand(prop)) {
+        return this._missingProps;
+      }
+
       const val = target[prop];
 
-      if (prop === "$get") return this.$get.bind(target);
-      if (prop === "$undefined") return this._missingProps;
-      if (this._isMissingProp(val)) this._missingProps.push(prop);
+      if (P.isObject(val)) {
+        return new Proxy(val, this);
+      }
 
-      this._savedProp = val;
-
-      if (this._isObject(val)) return new Proxy(val, this);
+      this._saveValue(val);
 
       return new Proxy(this, this);
     }
   };
 
-  return new Proxy(object, handler);
+  return new Proxy(handler._anyVal, handler);
 };

@@ -5,9 +5,12 @@ describe("Object test", () => {
     expect(Option).toBeDefined();
   });
 
-  describe("property access", () => {
+  describe("array property access", () => {
     it("can get an element from an array", () => {
-      throw new Error("Fail");
+      const test = [1];
+      const expected = 1;
+      const actual = new Option(test)[0].$get();
+      expect(actual).toEqual(expected);
     });
   });
 });

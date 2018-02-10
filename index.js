@@ -11,7 +11,7 @@ const _saveValue = require("./lib/_saveValue");
  * 
  * @param {Any} target Any value
  * @returns A Proxy instance with the provided value or an empty object
- * if the provided value is null or undefined.
+ * if the provided value is not an instance of Object.
  */
 function Option(anyVal) {
   const handler = {
@@ -51,11 +51,12 @@ function Option(anyVal) {
     }
   };
 
+  // if the provided value is not an instance of Object we init with an empty object
   const target = handler._savedNonObject !== undefined ? {} : handler._anyVal;
-
   return new Proxy(target, handler);
 }
 
+// alternative method to "new Option()"
 Option.from = function(val) {
   return new Option(val);
 };

@@ -1,4 +1,6 @@
 const P = require("./lib/predicates");
+const $get = require("./lib/$get");
+const _saveValue = require("./lib/_saveValue");
 
 /**
  * Option is intended to wrap any value in a Proxy to
@@ -13,22 +15,16 @@ const P = require("./lib/predicates");
  */
 module.exports = function Option(anyVal) {
   const handler = {
+    // private fields
     _savedProp: undefined,
     _anyVal: P.isNotDefined(anyVal) ? {} : anyVal,
     _missingProps: [],
 
-    $get: function() {
-      if (typeof this._savedProp !== "function") return this._savedProp;
-      return this._savedProp.apply(this._anyVal, arguments);
-    },
+    // ending function that executes property index chain
+    $get,
 
-    _saveValue: function(val) {
-      if (P.isUndefined(val)) {
-        this._missingProps.push(val);
-      }
-
-      this._savedProp = val;
-    },
+    // function to store _savedProp and _missingProps
+    _saveValue,
 
     get: function(target, prop) {
       if (P.isEndOfPropertyChainCommand(prop)) {
@@ -41,11 +37,11 @@ module.exports = function Option(anyVal) {
 
       const val = target[prop];
 
-      if (P.isObject(val)) {
+      if (P.isObject(val) || Array.isArray(val)) {
         return new Proxy(val, this);
       }
 
-      this._saveValue(val);
+      this._saveValue(prop, val);
 
       return new Proxy(this, this);
     }

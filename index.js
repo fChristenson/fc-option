@@ -1,6 +1,7 @@
 const P = require("./lib/predicates");
 const Target = require("./lib/target");
 const $get = require("./lib/$get");
+const $else = require("./lib/$else");
 const _saveValue = require("./lib/_saveValue");
 
 /**
@@ -21,20 +22,33 @@ function Option(anyVal) {
     _savedProp: undefined,
     _anyVal: P.isNotDefined(anyVal) ? {} : anyVal,
     _missingProps: [],
+    _stored$get: undefined,
 
-    // ending function that executes property index chain
+    // ending function that gets the previous property
+    // and can handle function input
     $get,
+
+    // ending function that returns a default value
+    $else,
 
     // function to store _savedProp and _missingProps
     _saveValue,
 
     get: function(target, prop) {
-      if (P.isEndOfPropertyChainCommand(prop) && this._savedNonObject) {
+      if (P.is$get(prop) && this._savedNonObject) {
         return () => this.$get(this._savedNonObject);
       }
 
-      if (P.isEndOfPropertyChainCommand(prop)) {
+      if (P.is$get(prop)) {
         return this.$get.bind(target);
+      }
+
+      if (P.is$else(prop) && this._savedNonObject) {
+        return () => this.$else(this._savedNonObject);
+      }
+
+      if (P.is$else(prop)) {
+        return this.$else.bind(target);
       }
 
       if (P.isReturnUndefinedPropertyArrayCommand(prop)) {

@@ -46,6 +46,16 @@ describe("array test", () => {
     expect(actual).toEqual(expected);
   });
 
+  it("can get a array prop of an element and then get the first element", () => {
+    const obj = {
+      foo: [1]
+    };
+    const test = [obj];
+    const expected = 1;
+    const actual = new Option(test)[0].foo[0].$get();
+    expect(actual).toEqual(expected);
+  });
+
   it("returns undefined for a missing prop on a element from the end of an array", () => {
     const obj = {
       foo: 1

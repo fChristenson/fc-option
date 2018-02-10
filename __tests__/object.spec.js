@@ -14,6 +14,15 @@ describe("object test", () => {
     expect(actual).toEqual(expected);
   });
 
+  it("can access a property one level deep with string name access", () => {
+    const test = {
+      foo: 1
+    };
+    const expected = 1;
+    const actual = new Option(test)["foo"].$get();
+    expect(actual).toEqual(expected);
+  });
+
   it("returns undefined if level one property is not on object", () => {
     const test = {};
     const expected = undefined;
